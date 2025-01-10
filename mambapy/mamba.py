@@ -244,7 +244,7 @@ class MambaBlock(nn.Module):
         # x branch
         x = x.transpose(1, 2)  # (B, ED, L)
         x = self.conv1d(x)[
-            :, :, :L
+            ..., :L
         ]  # depthwise convolution over time, with a short filter
         x = x.transpose(1, 2)  # (B, L, ED)
 
@@ -318,6 +318,7 @@ class MambaBlock(nn.Module):
         return y
 
     def selective_scan(self, x, delta, A, B, C, D):
+        """Parallel scan operation, as defined in the paper. Returns a new tensor."""
         # x : (B, L, ED)
         # Δ : (B, L, ED)
         # A : (ED, N)
@@ -343,6 +344,7 @@ class MambaBlock(nn.Module):
         return y
 
     def selective_scan_seq(self, x, delta, A, B, C, D):
+        """Without parallel scan, this is the sequential version of the selective scan"""
         # x : (B, L, ED)
         # Δ : (B, L, ED)
         # A : (ED, N)
